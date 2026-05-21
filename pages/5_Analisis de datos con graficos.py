@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Configuración de la página
-st.set_page_config(page_title="Actividad: Descubriendo los Datos reales ", layout="wide")
+st.set_page_config(page_title="Actividad: Descubriendo los Datos Reales", layout="wide")
 
 # --- Estilo Personalizado ---
 st.markdown("""
@@ -31,12 +31,13 @@ st.markdown("""
 st.title("🧩 Actividad: ¿De qué se tratan estos datos?")
 st.markdown("""
 ### Objetivo de la Actividad
-hacer filtros de los datos extraidos de internet que son reales 
+Explorar con gráficos datos reales extraídos de fuentes abiertas o archivos CSV,
+aplicando filtros y comparando columnas numéricas y categóricas.
 """)
 
 # --- Barra Lateral con Instrucciones e Interactividad ---
 with st.container():
-    st.header("📋 Guía para el analisis")
+    st.header("📋 Guía para el análisis")
     st.info("""
     1. **Observa** los gráficos. ¿Qué tendencias aparecen?
     2. **Compara** entre columnas numéricas y categóricas.
@@ -68,7 +69,7 @@ df = None
 if uploaded_file is not None:
     df = load_data(uploaded_file)
     if df is not None:
-        st.success(" Dataset cargado para el analisis")
+        st.success("Dataset cargado para el análisis.")
 
 if df is not None:
     num_cols = df.select_dtypes(include=['number']).columns.tolist()
@@ -138,7 +139,7 @@ if df is not None:
         st.plotly_chart(missing_fig, use_container_width=True, key="missing_values_chart")
         st.markdown("💡 *Pregunta: ¿Por qué crees que faltan datos en esas columnas específicas?*")
     else:
-        st.success("este dataset está completo,No faltan datos.")
+        st.success("Este dataset está completo. No faltan datos.")
 
     with st.expander("💡 ¿Qué significan los datos faltantes?", expanded=False):
         st.write("""
@@ -179,14 +180,33 @@ if df is not None:
 
 
     # --- Conclusiones de Investigación ---
-    st.header("📝 Resumen del analisis")
+    st.header("📝 Resumen del análisis")
     st.markdown(f"""
-    ### 🕵️ Informe del Detective
-    Basado en tu investigación, aquí hay una validación de lo que has encontrado:
-    * **Volumen**: Estás manejando **{df.shape[0]} registros**.
-    * **Variables**: El dataset contiene **{len(cat_cols)} columnas de texto** y **{len(num_cols)} columnas numéricas**.
-    * **Análisis visual**: Usa los gráficos interactivos para comparar tendencias en los primeros **{rows_to_plot} registros**.
+    ### 🕵️ Informe del detective
+    Basado en tu investigación, aquí hay un resumen de lo encontrado:
+    * **Volumen:** Estás manejando **{df.shape[0]} registros**.
+    * **Variables:** El dataset contiene **{len(cat_cols)} columnas de texto** y **{len(num_cols)} columnas numéricas**.
+    * **Análisis visual:** Usa los gráficos interactivos para comparar tendencias en los primeros **{rows_to_plot} registros**.
     """)
+
+    st.divider()
+    st.header("✍️ Conclusiones finales")
+    st.markdown("Escribe tus hallazgos principales después de revisar los gráficos.")
+    conclusiones_graficos = st.text_area(
+        "¿Qué conclusiones obtienes de los datos?",
+        placeholder="Ej: La mayoría de los registros corresponde a un mismo municipio y las columnas numéricas muestran...",
+        height=150,
+        key="conclusiones_graficos",
+    )
+    if conclusiones_graficos.strip():
+        with st.expander("Vista previa de tus conclusiones", expanded=False):
+            st.markdown(conclusiones_graficos)
+        st.download_button(
+            label="📥 Descargar conclusiones (.txt)",
+            data=conclusiones_graficos,
+            file_name="conclusiones_analisis_graficos.txt",
+            mime="text/plain",
+        )
 else:
     st.warning("sube un archivo CSV para hacer el analisis como tal ")
 
@@ -417,3 +437,4 @@ if not ascending:
     )
 
 st.plotly_chart(fig, use_container_width=True)
+    st.warning("Sube un archivo CSV para comenzar el análisis con gráficos.")
